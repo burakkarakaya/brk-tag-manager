@@ -35,6 +35,7 @@ function TagManager(obj) {
         elem = obj['elem'] || {},
         defElem = typeof gtmConfig !== 'undefined' ? (gtmConfig[type] || gtmDefConfig[type] || {}) : (gtmDefConfig[type] || {});
 
+    _self.onScroll = obj['onScroll'] || false;
     _self.currentPage = obj['currentPage'] || 'Category';
     _self.type = type;
     _self.el = $.extend(defElem, elem);
@@ -42,6 +43,7 @@ function TagManager(obj) {
 
 TagManager.prototype = {
     constructor: TagManager,
+    cls: { active: 'gtm-push-active' },
     template: {
         filter: "dataLayer.push({'event':'FilterClick','filterName':'{{NAME}} – {{VALUE}}'});",
         category: "dataLayer.push({'event':'CategoryClick','filterName':'{{NAME}} – {{VALUE}}'});"
@@ -139,7 +141,7 @@ TagManager.prototype = {
             _t.log({ title: 'productHover', value: obj });
 
 
-        } else if (typ == 'product') {
+        } else if (typ == 'product' && !_t.onScroll) {
 
             var obj = $(_t.el.item).map(function () {
                 return _t.getObj({ id: $(this) });
@@ -153,6 +155,19 @@ TagManager.prototype = {
             });
 
             _t.log({ title: 'all product', value: obj });
+
+        } else if (typ == 'productAdjust') {
+
+            var obj = o['value'];
+
+            dataLayer.push({
+                'ecommerce': {
+                    'currencyCode': 'TRY',
+                    'impressions': obj
+                }
+            });
+
+            _t.log({ title: 'product adjust', value: obj });
 
         } else if (typ == 'filter') {
             var lng = lang.split('-')[0], ID = $(_t.el.item);
@@ -212,7 +227,7 @@ TagManager.prototype = {
             type = _t.type;
 
         if (_t.detectEl(e)) {
-            if (type == 'product')
+            if (type == 'product') {
                 e
                     .unbind('mouseenter click')
                     .bind('mouseenter', function () { _t.sendGa({ ID: $(this), typ: 'productHover' }); })
@@ -222,7 +237,12 @@ TagManager.prototype = {
                         e.preventDefault();
                         _t.sendGa({ ID: $(this).parents('li').eq(0), typ: 'productClick' });
                     });
-            else if (type == 'promotion')
+
+                if (_t.onScroll)
+                    $(window)
+                        .unbind('resize scroll', _t.adjust.bind(this))
+                        .bind('resize scroll', _t.adjust.bind(this));
+            } else if (type == 'promotion')
                 e
                     .find(_t.el.clickedItem)
                     .unbind('click')
@@ -236,6 +256,33 @@ TagManager.prototype = {
     add: function () {
         var _t = this;
         _t.sendGa({ typ: _t.type });
+    },
+    detectPosition: function (ID) {
+        var _t = this, win = $(window), wt = parseFloat(win.width()), ht = parseFloat(win.height()), wst = parseFloat(win.scrollTop());
+
+        var b = false,
+            o1 = { x: 0, y: wst, width: wt, height: ht },
+            o2 = { x: 0, y: ID.offset().top, width: wt, height: ID.height() };
+        if (o1.x < o2.x + o2.width && o1.x + o1.width > o2.x && o1.y < o2.y + o2.height && o1.y + o1.height > o2.y) {
+            b = true;
+        }
+
+        return b;
+    },
+    adjust: function () {
+        var _t = this,
+            arr = [];
+        $(_t.el.item)
+            .each(function () {
+                var ths = $(this);
+                if (_t.detectPosition(ths) && !ths.hasClass(_t.cls['active'])) {
+                    ths.addClass(_t.cls['active']);
+                    arr.push(_t.getObj({ id: ths }));
+                }
+            });
+
+        if (arr.length > 0)
+            _t.sendGa({ typ: 'productAdjust', value: arr });
     },
     log: function ({ type, title = '', value }) {
         var loc = window.location.href;
