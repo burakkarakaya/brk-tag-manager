@@ -23,8 +23,9 @@ TagManager.prototype = {
 
             if (type == 'inside')
                 value = (ID.find(target).text() || '').trim();
-            else if (customFunc != '')
-                value = customFunc({ ID: ID.find(target) || ID, index: ind });
+
+            if (customFunc != '')
+                value = customFunc({ ID: ID.find(target).length > 0 ? ID.find(target) : ID, index: ind });
 
             obj[item['key']] = value;
         });
