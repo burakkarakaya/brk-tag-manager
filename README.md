@@ -27,21 +27,21 @@ Genel amacı belirlenen html de belirtilen alanları kullanıcı davranışları
 
 ```JS
 new TagManager({
-    items: '.swiper-container.main-slider .swiper-slide:not(".swiper-slide-duplicate")',
-    type: 'all-element',
+    items: '.swiper-container.main-slider .swiper-slide:not(".swiper-slide-duplicate")', // belirlenen elementteki kapsayıcı item belirlenir.
+    type: 'all-element', // all-element( ilk açılışta tetiklenir ), element-click( element tıklandığında tetiklenir ), scroll-element( belirtilen alan sahnede gözükür olduğunda tetiklenir ) 3 değer alır.
     props: [
         {
-            key: 'id',
-            target: '.bnr_code',
+            key: 'id', // target ile bulunan elementin değeri key eşitlenir. Yani { id: '125888' }
+            target: '.bnr_code', // kapsayıcı item içerisinde aranacak element
             type: 'inside'
         },
         {
-            key: 'name',
+            key: 'name', // { id: '125888', name: 'World' }
             target: '.swiper-content-inner h2',
             type: 'inside'
         },
         {
-            key: 'position',
+            key: 'position', // { id: '125888', name: 'World', position: 0 }
             customFunc: function (o) {
                 var index = o['index'];
                 return 'Homepage | Slider | ' + index;
