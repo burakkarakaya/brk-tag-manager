@@ -1,6 +1,6 @@
 # Brk Tag Manager
 
-Genel amacı belirlenen html de belirtilen alanaları kullanıcı davranışlarına göre google analytic gibi analiz araçlarına gönderebilmek.
+Genel amacı belirlenen html de belirtilen alanları kullanıcı davranışlarına göre google analytic gibi analiz araçlarına gönderebilmek.
 
 Örneğin sayfadaki slider üzerindeki "bnr_code" ve "h2" alanlarını analytic yollayalım.
 
