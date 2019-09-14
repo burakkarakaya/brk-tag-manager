@@ -1,5 +1,26 @@
 # Tag Manager
 
+```HTML
+<div class="homepage-slider swiper-container">
+    <div class="swiper-inner">
+        <ul class="swiper-wrapper">
+            <li class="swiper-slide">
+                <div class="bnr_code">125888</div>
+                <div class="swiper-content-inner">
+                    <h2>Hello</h2>
+                </div>
+            </li>
+            <li class="swiper-slide">
+                <div class="bnr_code">125999</div>
+                <div class="swiper-content-inner">
+                    <h2>World</h2>
+                </div>
+            </li>
+        </ul>
+    </div>
+</div>
+```
+
 ```JS
 /* all promotion */
 new TagManager({
