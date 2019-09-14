@@ -1,4 +1,8 @@
-# Tag Manager
+# Brk Tag Manager
+
+Genel amacı belirlenen htmlde belirtilen alanaları kullanıcı davranışlarına göre google analytic gibi analiz araçlarına gönderebilmek.
+
+Örneğin sayfadaki slider üzerindeki "bnr_code" ve "h2" alanlarını analytic yollayalım.
 
 ```HTML
 <div class="homepage-slider swiper-container">
